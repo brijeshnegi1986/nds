@@ -1,5 +1,5 @@
 "use client";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
 /**
  * A row's "⋯" menu of actions (an admin table's Edit, Set up, Archive): one
@@ -10,8 +10,13 @@ import { useEffect, useId, useRef, useState } from "react";
  *
  * `kind="add"` makes it an Add button instead: a 44px dashed round "+" (a
  * row of channel toggles' "+ Add channel"), whose menu opens to the right.
+ *
+ * `kind="channel"` is a channel connected somewhere else (another posting
+ * profile): its logo (`icon`), faded, in a 44px round with a solid edge and
+ * a small `badge` (the profile's initial) where the "+" would be; the menu
+ * opens to the right, under a line saying where the channel is (`heading`).
  */
-export function ActionMenu({ label, items, kind = "more", className = "", }) {
+export function ActionMenu({ label, items, kind = "more", icon, badge, heading, className = "", }) {
     const [open, setOpen] = useState(false);
     const button = useRef(null);
     const menu = useRef(null);
@@ -49,8 +54,12 @@ export function ActionMenu({ label, items, kind = "more", className = "", }) {
             setOpen(false);
         }
     }
-    return (_jsxs("div", { className: `relative inline-block ${className}`.trim(), children: [_jsx("button", { ref: button, type: "button", "aria-label": label, title: label, "aria-haspopup": "menu", "aria-expanded": open, "aria-controls": open ? menuId : undefined, onClick: () => setOpen((o) => !o), className: `flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${kind === "add" ? "size-11 border border-dashed border-(--color-border-subtle)" : "size-8"}`, children: kind === "add" ? (_jsx("svg", { "data-part": "plus", "aria-hidden": true, viewBox: "0 0 20 20", className: "size-5", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: _jsx("path", { d: "M10 4v12M4 10h12" }) })) : (_jsxs("svg", { "aria-hidden": true, viewBox: "0 0 20 20", className: "size-5", fill: "currentColor", children: [_jsx("circle", { cx: "4.5", cy: "10", r: "1.5" }), _jsx("circle", { cx: "10", cy: "10", r: "1.5" }), _jsx("circle", { cx: "15.5", cy: "10", r: "1.5" })] })) }), open && (_jsx("div", { ref: menu, id: menuId, role: "menu", "aria-label": label, onKeyDown: onKeyDown, className: `absolute ${kind === "add" ? "left-0" : "right-0"} z-30 mt-1 flex min-w-44 flex-col rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) p-1 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)]`, children: items.map((item) => (_jsxs("button", { type: "button", role: "menuitem", disabled: item.disabled, onClick: () => {
-                        close(true);
-                        item.onSelect();
-                    }, className: `flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm whitespace-nowrap transition-colors hover:bg-(--color-action-tertiary-hover) focus-visible:bg-(--color-action-tertiary-hover) focus-visible:outline-none disabled:cursor-not-allowed disabled:text-(--color-content-disabled) disabled:hover:bg-transparent ${item.tone === "danger" ? "text-(--color-status-error)" : "text-(--color-content-primary)"}`, children: [item.icon && (_jsx("span", { "aria-hidden": true, className: "inline-flex shrink-0", children: item.icon })), item.label] }, item.label))) }))] }));
+    return (_jsxs("div", { className: `relative inline-block ${className}`.trim(), children: [_jsx("button", { ref: button, type: "button", "aria-label": label, title: label, "aria-haspopup": "menu", "aria-expanded": open, "aria-controls": open ? menuId : undefined, onClick: () => setOpen((o) => !o), className: `relative flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${kind === "add"
+                    ? "size-11 border border-dashed border-(--color-border-subtle)"
+                    : kind === "channel"
+                        ? "size-11 border border-(--color-border-subtle) bg-(--color-surface-default)"
+                        : "size-8"}`, children: kind === "channel" ? (_jsxs(_Fragment, { children: [_jsx("span", { "data-part": "logo", "aria-hidden": true, className: "inline-flex opacity-50", children: icon }), badge && (_jsx("span", { "data-part": "badge", "aria-hidden": true, className: "absolute -right-1 -bottom-1 flex size-4.5 items-center justify-center rounded-full bg-(--color-surface-default) text-[10px] font-semibold text-(--color-content-secondary) ring-1 ring-(--color-border-subtle)", children: badge }))] })) : kind === "add" ? (_jsx("svg", { "data-part": "plus", "aria-hidden": true, viewBox: "0 0 20 20", className: "size-5", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: _jsx("path", { d: "M10 4v12M4 10h12" }) })) : (_jsxs("svg", { "aria-hidden": true, viewBox: "0 0 20 20", className: "size-5", fill: "currentColor", children: [_jsx("circle", { cx: "4.5", cy: "10", r: "1.5" }), _jsx("circle", { cx: "10", cy: "10", r: "1.5" }), _jsx("circle", { cx: "15.5", cy: "10", r: "1.5" })] })) }), open && (_jsxs("div", { ref: menu, id: menuId, role: "menu", "aria-label": label, onKeyDown: onKeyDown, className: `absolute ${kind === "more" ? "right-0" : "left-0"} z-30 mt-1 flex min-w-44 flex-col rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) p-1 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)]`, children: [heading && (_jsx("p", { "data-part": "heading", className: "max-w-64 px-3 pt-2 pb-1 text-xs text-(--color-content-secondary)", children: heading })), items.map((item) => (_jsxs("button", { type: "button", role: "menuitem", disabled: item.disabled, onClick: () => {
+                            close(true);
+                            item.onSelect();
+                        }, className: `flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm whitespace-nowrap transition-colors hover:bg-(--color-action-tertiary-hover) focus-visible:bg-(--color-action-tertiary-hover) focus-visible:outline-none disabled:cursor-not-allowed disabled:text-(--color-content-disabled) disabled:hover:bg-transparent ${item.tone === "danger" ? "text-(--color-status-error)" : "text-(--color-content-primary)"}`, children: [item.icon && (_jsx("span", { "aria-hidden": true, className: "inline-flex shrink-0", children: item.icon })), item.label] }, item.label)))] }))] }));
 }

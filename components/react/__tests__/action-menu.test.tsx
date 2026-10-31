@@ -108,5 +108,38 @@ describe("ActionMenu", () => {
     act(() => item.click());
     expect(calls).toEqual(["threads"]);
   });
-});
 
+  it("can be a channel kept elsewhere: its faded logo, a badge, and a line saying where it is", () => {
+    host = document.createElement("div");
+    document.body.appendChild(host);
+    root = createRoot(host);
+    const calls: string[] = [];
+    act(() =>
+      root.render(
+        <ActionMenu
+          kind="channel"
+          label="LinkedIn, in your Jesh Negi profile"
+          icon={<span data-icon-linkedin />}
+          badge="J"
+          heading="LinkedIn is in your Jesh Negi profile."
+          items={[{ label: "Write as Jesh Negi", onSelect: () => calls.push("write-as") }]}
+        />,
+      ),
+    );
+    const button = host.querySelector<HTMLButtonElement>("button[aria-haspopup='menu']")!;
+    expect(button.getAttribute("aria-label")).toBe("LinkedIn, in your Jesh Negi profile");
+    expect(button.className.split(" ")).toContain("size-11");
+    // Connected, so a solid edge, not the dashed one of something to add.
+    expect(button.className).not.toContain("border-dashed");
+    expect(button.querySelector("[data-part='logo']")!.className).toContain("opacity-50");
+    expect(button.querySelector("[data-icon-linkedin]")).not.toBeNull();
+    expect(button.querySelector("[data-part='badge']")!.textContent).toBe("J");
+    expect(button.querySelector("[data-part='plus']")).toBeNull();
+    act(() => button.click());
+    const menu = host.querySelector<HTMLElement>("[role='menu']")!;
+    expect(menu.className.split(" ")).toContain("left-0");
+    expect(menu.querySelector("[data-part='heading']")!.textContent).toBe("LinkedIn is in your Jesh Negi profile.");
+    act(() => menu.querySelector<HTMLButtonElement>("[role='menuitem']")!.click());
+    expect(calls).toEqual(["write-as"]);
+  });
+});

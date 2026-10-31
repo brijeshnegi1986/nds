@@ -10,12 +10,14 @@ import type { ReactNode } from "react";
  * place until there is one (Instagram and Pinterest need one). A Pin
  * shows its `title` in bold under a tall 2:3 image, and has no reactions bar.
  */
-export declare function PostPreview({ platform, name, meta, avatar, image, imageAlt, imagePlaceholder, title, className, children, }: {
+export declare function PostPreview({ platform, name, meta, avatar, icon, image, imageAlt, imagePlaceholder, title, className, children, }: {
     platform: string;
     name: string;
     /** Under the name, e.g. "Just now · Facebook". */
     meta?: ReactNode;
     avatar?: string | null;
+    /** In place of the avatar: the channel's logo, about 40px. */
+    icon?: ReactNode;
     image?: string | null;
     imageAlt?: string;
     imagePlaceholder?: ReactNode;

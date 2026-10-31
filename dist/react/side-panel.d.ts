@@ -44,8 +44,8 @@ export declare function SidePanel({ label, labelledBy, className, dock, collapse
         /** The id of the content it hides, for aria-controls. */
         controls?: string;
         /** Its width pulled out from xl: md 384px (default), sm 256px for a
-         * tray beside a wide grid. */
-        size?: "sm" | "md";
+         * tray beside a wide grid, lg 480px for post previews at feed width. */
+        size?: "sm" | "md" | "lg";
     };
     children: ReactNode;
 }): import("react").JSX.Element;
