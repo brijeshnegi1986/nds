@@ -82,6 +82,16 @@ describe("PostPreview", () => {
     expect(el.querySelector("[data-reactions]")).toBeNull();
   });
 
+  it("can show the channel's logo where the letter avatar would be", () => {
+    const el = dom(
+      <PostPreview platform="facebook" name="Negiflow (Page)" icon={<span data-icon-facebook />}>
+        <p>x</p>
+      </PostPreview>,
+    );
+    expect(el.querySelector("[data-icon-facebook]")).not.toBeNull();
+    expect(el.querySelector("[data-avatar]")).toBeNull();
+  });
+
   it("shows a placeholder where Instagram's image goes until there is one", () => {
     const el = dom(
       <PostPreview platform="instagram" name="negiflow" imagePlaceholder="Add an image to post on Instagram">

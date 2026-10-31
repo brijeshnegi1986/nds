@@ -17,10 +17,21 @@ export type ActionMenuItem = {
  *
  * `kind="add"` makes it an Add button instead: a 44px dashed round "+" (a
  * row of channel toggles' "+ Add channel"), whose menu opens to the right.
+ *
+ * `kind="channel"` is a channel connected somewhere else (another posting
+ * profile): its logo (`icon`), faded, in a 44px round with a solid edge and
+ * a small `badge` (the profile's initial) where the "+" would be; the menu
+ * opens to the right, under a line saying where the channel is (`heading`).
  */
-export declare function ActionMenu({ label, items, kind, className, }: {
+export declare function ActionMenu({ label, items, kind, icon, badge, heading, className, }: {
     label: string;
     items: ActionMenuItem[];
-    kind?: "more" | "add";
+    kind?: "more" | "add" | "channel";
+    /** kind="channel": the channel's logo, about 22px. */
+    icon?: ReactNode;
+    /** kind="channel": one or two characters, such as the profile's initial. */
+    badge?: string;
+    /** A line above the actions, saying what they're about. */
+    heading?: ReactNode;
     className?: string;
 }): import("react").JSX.Element;

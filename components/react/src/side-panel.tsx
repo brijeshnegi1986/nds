@@ -75,8 +75,8 @@ export function SidePanel({
     /** The id of the content it hides, for aria-controls. */
     controls?: string;
     /** Its width pulled out from xl: md 384px (default), sm 256px for a
-     * tray beside a wide grid. */
-    size?: "sm" | "md";
+     * tray beside a wide grid, lg 480px for post previews at feed width. */
+    size?: "sm" | "md" | "lg";
   };
   children: ReactNode;
 }) {
@@ -170,7 +170,7 @@ export function SidePanel({
       aria-labelledby={labelledBy}
       data-state="expanded"
       {...dockAttrs}
-      className={`fixed inset-y-0 z-50 flex w-[min(24rem,calc(100vw-2rem))] ${size === "sm" ? "xl:w-64" : "xl:w-96"} flex-col gap-5 overflow-y-auto bg-(--color-surface-raised) p-6 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)] xl:top-16 xl:bottom-0 xl:z-10 xl:shadow-none ${side === "right" ? "right-0" : "left-0 xl:left-[var(--app-sidebar-width,0px)]"} ${className}`.trim()}
+      className={`fixed inset-y-0 z-50 flex ${size === "lg" ? "w-[min(30rem,calc(100vw-2rem))] xl:w-[30rem]" : `w-[min(24rem,calc(100vw-2rem))] ${size === "sm" ? "xl:w-64" : "xl:w-96"}`} flex-col gap-5 overflow-y-auto bg-(--color-surface-raised) p-6 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)] xl:top-16 xl:bottom-0 xl:z-10 xl:shadow-none ${side === "right" ? "right-0" : "left-0 xl:left-[var(--app-sidebar-width,0px)]"} ${className}`.trim()}
     >
       <div className="-my-2 flex items-center justify-between gap-2">
         <h2 id={labelledBy} className="text-base font-semibold text-(--color-content-primary)">{name}</h2>

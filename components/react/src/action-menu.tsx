@@ -21,16 +21,30 @@ export type ActionMenuItem = {
  *
  * `kind="add"` makes it an Add button instead: a 44px dashed round "+" (a
  * row of channel toggles' "+ Add channel"), whose menu opens to the right.
+ *
+ * `kind="channel"` is a channel connected somewhere else (another posting
+ * profile): its logo (`icon`), faded, in a 44px round with a solid edge and
+ * a small `badge` (the profile's initial) where the "+" would be; the menu
+ * opens to the right, under a line saying where the channel is (`heading`).
  */
 export function ActionMenu({
   label,
   items,
   kind = "more",
+  icon,
+  badge,
+  heading,
   className = "",
 }: {
   label: string;
   items: ActionMenuItem[];
-  kind?: "more" | "add";
+  kind?: "more" | "add" | "channel";
+  /** kind="channel": the channel's logo, about 22px. */
+  icon?: ReactNode;
+  /** kind="channel": one or two characters, such as the profile's initial. */
+  badge?: string;
+  /** A line above the actions, saying what they're about. */
+  heading?: ReactNode;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -80,11 +94,30 @@ export function ActionMenu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((o) => !o)}
-        className={`flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${
-          kind === "add" ? "size-11 border border-dashed border-(--color-border-subtle)" : "size-8"
+        className={`relative flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${
+          kind === "add"
+            ? "size-11 border border-dashed border-(--color-border-subtle)"
+            : kind === "channel"
+              ? "size-11 border border-(--color-border-subtle) bg-(--color-surface-default)"
+              : "size-8"
         }`}
       >
-        {kind === "add" ? (
+        {kind === "channel" ? (
+          <>
+            <span data-part="logo" aria-hidden className="inline-flex opacity-50">
+              {icon}
+            </span>
+            {badge && (
+              <span
+                data-part="badge"
+                aria-hidden
+                className="absolute -right-1 -bottom-1 flex size-4.5 items-center justify-center rounded-full bg-(--color-surface-default) text-[10px] font-semibold text-(--color-content-secondary) ring-1 ring-(--color-border-subtle)"
+              >
+                {badge}
+              </span>
+            )}
+          </>
+        ) : kind === "add" ? (
           <svg data-part="plus" aria-hidden viewBox="0 0 20 20" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
             <path d="M10 4v12M4 10h12" />
           </svg>
@@ -103,8 +136,13 @@ export function ActionMenu({
           role="menu"
           aria-label={label}
           onKeyDown={onKeyDown}
-          className={`absolute ${kind === "add" ? "left-0" : "right-0"} z-30 mt-1 flex min-w-44 flex-col rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) p-1 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)]`}
+          className={`absolute ${kind === "more" ? "right-0" : "left-0"} z-30 mt-1 flex min-w-44 flex-col rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) p-1 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)]`}
         >
+          {heading && (
+            <p data-part="heading" className="max-w-64 px-3 pt-2 pb-1 text-xs text-(--color-content-secondary)">
+              {heading}
+            </p>
+          )}
           {items.map((item) => (
             <button
               key={item.label}

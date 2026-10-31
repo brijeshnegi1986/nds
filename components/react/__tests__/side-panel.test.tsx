@@ -180,4 +180,11 @@ describe("SidePanel pulled out: a proper side panel", () => {
     const closed = aside(<SidePanel label="Ready to post" collapse={{ open: false, onToggle: () => {}, side: "left", size: "sm" }}>x</SidePanel>);
     expect(closed.getAttribute("data-dock")).toBe("left");
   });
+
+  it("comes in a wide size, 480px, for post previews at feed width", () => {
+    const el = aside(<SidePanel label="Post preview" collapse={{ open: true, onToggle: () => {}, side: "right", size: "lg" }}>x</SidePanel>);
+    expect(el.className).toMatch(/xl:w-\[30rem\]/);
+    expect(el.className).toMatch(/w-\[min\(30rem,calc\(100vw-2rem\)\)\]/);
+    expect(el.getAttribute("data-size")).toBe("lg");
+  });
 });

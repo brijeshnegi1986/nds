@@ -35,6 +35,7 @@ export function PostPreview({
   name,
   meta,
   avatar,
+  icon,
   image,
   imageAlt = "",
   imagePlaceholder,
@@ -47,6 +48,8 @@ export function PostPreview({
   /** Under the name, e.g. "Just now · Facebook". */
   meta?: ReactNode;
   avatar?: string | null;
+  /** In place of the avatar: the channel's logo, about 40px. */
+  icon?: ReactNode;
   image?: string | null;
   imageAlt?: string;
   imagePlaceholder?: ReactNode;
@@ -81,7 +84,11 @@ export function PostPreview({
       className={`flex flex-col gap-3 overflow-hidden rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) pt-4 pb-3 ${className}`.trim()}
     >
       <header className="flex items-center gap-3 px-4">
-        {avatar ? (
+        {icon ? (
+          <span aria-hidden className="flex size-10 shrink-0 items-center justify-center">
+            {icon}
+          </span>
+        ) : avatar ? (
           <img src={avatar} alt="" className="size-10 shrink-0 rounded-full object-cover" />
         ) : (
           <span
