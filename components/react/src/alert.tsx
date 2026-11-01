@@ -20,6 +20,10 @@ const TONES: Record<AlertTone, { fill: string; text: string; stripe: string; ico
  * corners, the sm elevation, 16px across and 12px down. An error is announced
  * at once (role="alert"); the others politely (role="status"); pass role={null}
  * for a step the person is already looking at, like a delete confirmation.
+ *
+ * `onDismiss` makes it dismissible: a "Got it" text button (or
+ * `dismissLabel`) at the end of its first line, the one way a notice is put
+ * away, never a big round close icon.
  */
 export function Alert({
   tone = "info",
@@ -28,6 +32,8 @@ export function Alert({
   role,
   className = "",
   children,
+  onDismiss,
+  dismissLabel = "Got it",
   ...rest
 }: {
   tone?: AlertTone;
@@ -37,6 +43,9 @@ export function Alert({
   role?: "alert" | "status" | null;
   className?: string;
   children?: ReactNode;
+  /** Puts the notice away: adds the dismiss text button. */
+  onDismiss?: () => void;
+  dismissLabel?: string;
   "data-testid"?: string;
 }) {
   const t = TONES[tone];
@@ -50,6 +59,15 @@ export function Alert({
         />
       )}
     </span>
+  );
+  const dismiss = onDismiss && (
+    <button
+      type="button"
+      onClick={onDismiss}
+      className="ml-auto shrink-0 rounded-sm pt-px pl-3 font-medium text-(--color-content-primary) underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus)"
+    >
+      {dismissLabel}
+    </button>
   );
   return (
     <div
@@ -65,6 +83,7 @@ export function Alert({
             <p data-part="title" className={`pt-px font-medium ${t.text}`}>
               {title}
             </p>
+            {dismiss}
           </div>
           {children && <div className="text-(--color-content-primary)">{children}</div>}
         </>
@@ -72,6 +91,7 @@ export function Alert({
         <div className="flex items-start gap-1">
           {glyph}
           <div className="min-w-0 pt-px text-(--color-content-primary)">{children}</div>
+          {dismiss}
         </div>
       )}
     </div>

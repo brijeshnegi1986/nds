@@ -93,13 +93,21 @@ export function TextInput({
 }
 
 /** The NDS field look for a raw input, textarea or select that can't use
- * TextInput/TextArea: white fill, the input border, 16px text, an 8px corner
- * (single-line inputs and selects become pills in globals.css), border-focus
+ * TextInput/TextArea: white fill, the input border, 16px text, a 24px corner
+ * (V4: a text area's corner matches the 48px pill that single-line inputs and
+ * selects become in styles.css), border-focus
  * on hover and as the focus ring, and the error and disabled states. */
-export const FIELD_CONTROL_CLASS = `${CONTROL_BASE} rounded-md py-3 transition-colors hover:border-(--color-border-focus) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) aria-[invalid=true]:border-(--color-border-error) disabled:border-(--color-border-disabled) disabled:bg-(--color-action-disabled) disabled:text-(--color-content-disabled)`;
+export const FIELD_CONTROL_CLASS = `${CONTROL_BASE} rounded-[24px] py-3 transition-colors hover:border-(--color-border-focus) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) aria-[invalid=true]:border-(--color-border-error) disabled:border-(--color-border-disabled) disabled:bg-(--color-action-disabled) disabled:text-(--color-content-disabled)`;
 
+/** A text area: the field look with a 24px corner, the same corner as the
+ * 48px pill inputs beside it (V4), so a form's fields share one shape. */
 export function TextArea(props: React.ComponentProps<"textarea">) {
-  return <textarea {...props} className={`${FIELD_CONTROL_CLASS} min-h-21.5 resize-y ${props.className ?? ""}`} />;
+  return (
+    <textarea
+      {...props}
+      className={`${FIELD_CONTROL_CLASS} min-h-21.5 resize-y ${props.className ?? ""}`}
+    />
+  );
 }
 
 /** The NDS chip (Figma "Chip", 641:1505): a pill on action-secondary with a

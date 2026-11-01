@@ -16,10 +16,15 @@ const TONES = {
  * corners, the sm elevation, 16px across and 12px down. An error is announced
  * at once (role="alert"); the others politely (role="status"); pass role={null}
  * for a step the person is already looking at, like a delete confirmation.
+ *
+ * `onDismiss` makes it dismissible: a "Got it" text button (or
+ * `dismissLabel`) at the end of its first line, the one way a notice is put
+ * away, never a big round close icon.
  */
-export function Alert({ tone = "info", title, icon, role, className = "", children, ...rest }) {
+export function Alert({ tone = "info", title, icon, role, className = "", children, onDismiss, dismissLabel = "Got it", ...rest }) {
     const t = TONES[tone];
     const liveRole = role === null ? undefined : (role ?? (tone === "error" ? "alert" : "status"));
     const glyph = (_jsx("span", { "data-part": "icon", "data-icon": icon ? "custom" : t.icon, "aria-hidden": true, className: `mt-0.5 flex size-5 shrink-0 ${t.text}`, children: icon ?? (_jsx("span", { className: "size-5 bg-current", style: iconMask(t.icon) })) }));
-    return (_jsxs("div", { role: liveRole, ...rest, className: `relative flex flex-col gap-1 overflow-hidden rounded-(--radius-md) px-4 py-3 text-(length:--type-font-size-body-small) leading-(--type-line-height-body-small) shadow-[0_var(--elevation-sm)_2px_rgb(0_0_0/0.1)] ${t.fill} ${className}`.trim(), children: [_jsx("span", { "data-part": "indicator", "aria-hidden": true, className: `absolute inset-y-0 left-0 w-1 ${t.stripe}` }), title ? (_jsxs(_Fragment, { children: [_jsxs("div", { className: "flex items-start gap-1", children: [glyph, _jsx("p", { "data-part": "title", className: `pt-px font-medium ${t.text}`, children: title })] }), children && _jsx("div", { className: "text-(--color-content-primary)", children: children })] })) : (_jsxs("div", { className: "flex items-start gap-1", children: [glyph, _jsx("div", { className: "min-w-0 pt-px text-(--color-content-primary)", children: children })] }))] }));
+    const dismiss = onDismiss && (_jsx("button", { type: "button", onClick: onDismiss, className: "ml-auto shrink-0 rounded-sm pt-px pl-3 font-medium text-(--color-content-primary) underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus)", children: dismissLabel }));
+    return (_jsxs("div", { role: liveRole, ...rest, className: `relative flex flex-col gap-1 overflow-hidden rounded-(--radius-md) px-4 py-3 text-(length:--type-font-size-body-small) leading-(--type-line-height-body-small) shadow-[0_var(--elevation-sm)_2px_rgb(0_0_0/0.1)] ${t.fill} ${className}`.trim(), children: [_jsx("span", { "data-part": "indicator", "aria-hidden": true, className: `absolute inset-y-0 left-0 w-1 ${t.stripe}` }), title ? (_jsxs(_Fragment, { children: [_jsxs("div", { className: "flex items-start gap-1", children: [glyph, _jsx("p", { "data-part": "title", className: `pt-px font-medium ${t.text}`, children: title }), dismiss] }), children && _jsx("div", { className: "text-(--color-content-primary)", children: children })] })) : (_jsxs("div", { className: "flex items-start gap-1", children: [glyph, _jsx("div", { className: "min-w-0 pt-px text-(--color-content-primary)", children: children }), dismiss] }))] }));
 }

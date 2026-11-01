@@ -1,7 +1,14 @@
 /** Alert (Figma 426:540): status fill, a 4px indicator stripe, a 20px icon,
  * an optional 14/20 medium title in the status colour, a 14/20 body. */
 import { describe, expect, it } from "vitest";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
+
+declare global {
+  var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
+}
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 import { Alert } from "../src/index.js";
 
 function alert(node: React.ReactElement): HTMLElement {
@@ -44,5 +51,39 @@ describe("Alert (audit M9)", () => {
     expect(icon("success")).toBe("check-circle-filled");
     expect(icon("warning")).toBe("warning-filled");
     expect(icon("error")).toBe("error-filled");
+  });
+});
+
+describe("Alert: dismissible (V4)", () => {
+  it("ends with a Got it text button when it can be dismissed", () => {
+    let dismissed = 0;
+    const host = document.createElement("div");
+    document.body.appendChild(host);
+    const root = createRoot(host);
+    act(() =>
+      root.render(
+        <Alert tone="info" onDismiss={() => dismissed++}>
+          3 drafts are waiting for review.
+        </Alert>,
+      ),
+    );
+    const button = host.querySelector("button")!;
+    expect(button.textContent).toBe("Got it");
+    expect(button.getAttribute("type")).toBe("button");
+    // A text button, not a big round close icon.
+    expect(button.className).not.toContain("rounded-full");
+    act(() => button.click());
+    expect(dismissed).toBe(1);
+    act(() => root.unmount());
+    host.remove();
+  });
+
+  it("takes its own words for the dismiss", () => {
+    const html = renderToStaticMarkup(<Alert onDismiss={() => {}} dismissLabel="Hide">x</Alert>);
+    expect(html).toContain(">Hide</button>");
+  });
+
+  it("has no button when it can't be dismissed", () => {
+    expect(renderToStaticMarkup(<Alert>x</Alert>)).not.toContain("<button");
   });
 });

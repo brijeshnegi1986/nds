@@ -9,8 +9,12 @@ export type AlertTone = "neutral" | "info" | "success" | "warning" | "error";
  * corners, the sm elevation, 16px across and 12px down. An error is announced
  * at once (role="alert"); the others politely (role="status"); pass role={null}
  * for a step the person is already looking at, like a delete confirmation.
+ *
+ * `onDismiss` makes it dismissible: a "Got it" text button (or
+ * `dismissLabel`) at the end of its first line, the one way a notice is put
+ * away, never a big round close icon.
  */
-export declare function Alert({ tone, title, icon, role, className, children, ...rest }: {
+export declare function Alert({ tone, title, icon, role, className, children, onDismiss, dismissLabel, ...rest }: {
     tone?: AlertTone;
     title?: ReactNode;
     /** Replaces the tone's icon (e.g. the safety notice's shield). */
@@ -18,5 +22,8 @@ export declare function Alert({ tone, title, icon, role, className, children, ..
     role?: "alert" | "status" | null;
     className?: string;
     children?: ReactNode;
+    /** Puts the notice away: adds the dismiss text button. */
+    onDismiss?: () => void;
+    dismissLabel?: string;
     "data-testid"?: string;
 }): import("react").JSX.Element;
