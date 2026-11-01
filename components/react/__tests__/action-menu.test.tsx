@@ -142,4 +142,33 @@ describe("ActionMenu", () => {
     act(() => menu.querySelector<HTMLButtonElement>("[role='menuitem']")!.click());
     expect(calls).toEqual(["write-as"]);
   });
+
+  it("can be a Secondary button with its own words, opening its menu under its right edge", () => {
+    host = document.createElement("div");
+    document.body.appendChild(host);
+    root = createRoot(host);
+    const calls: string[] = [];
+    act(() =>
+      root.render(
+        <ActionMenu
+          kind="button"
+          text="Connect a channel"
+          label="Connect a channel to Stakemate"
+          items={[{ label: "LinkedIn", icon: <span data-icon-linkedin />, onSelect: () => calls.push("linkedin") }]}
+        />,
+      ),
+    );
+    const button = host.querySelector<HTMLButtonElement>("button[aria-haspopup='menu']")!;
+    expect(button.textContent).toContain("Connect a channel");
+    expect(button.getAttribute("aria-label")).toBe("Connect a channel to Stakemate");
+    // The black Secondary button, small, not a round icon.
+    expect(button.className).toContain("bg-(--color-action-secondary)");
+    expect(button.className.split(" ")).not.toContain("size-8");
+    expect(button.querySelector("[data-part='chevron']")).not.toBeNull();
+    act(() => button.click());
+    const menu = host.querySelector<HTMLElement>("[role='menu']")!;
+    expect(menu.className.split(" ")).toContain("right-0");
+    act(() => menu.querySelector<HTMLButtonElement>("[role='menuitem']")!.click());
+    expect(calls).toEqual(["linkedin"]);
+  });
 });

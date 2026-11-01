@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { buttonClassName } from "./button.js";
 
 export type ActionMenuItem = {
   label: string;
@@ -26,6 +27,11 @@ export type ActionMenuItem = {
  * profile): its logo (`icon`), faded, in a 44px round with a solid edge and
  * a small `badge` (the profile's initial) where the "+" would be; the menu
  * opens to the right, under a line saying where the channel is (`heading`).
+ *
+ * `kind="button"` is the black Secondary button (SM) with its own words
+ * (`text`, "Connect a channel") and a chevron; its menu opens under its
+ * right edge. `label` can say more for screen readers ("Connect a channel
+ * to Stakemate").
  */
 export function ActionMenu({
   label,
@@ -34,17 +40,20 @@ export function ActionMenu({
   icon,
   badge,
   heading,
+  text,
   className = "",
 }: {
   label: string;
   items: ActionMenuItem[];
-  kind?: "more" | "add" | "channel";
+  kind?: "more" | "add" | "channel" | "button";
   /** kind="channel": the channel's logo, about 22px. */
   icon?: ReactNode;
   /** kind="channel": one or two characters, such as the profile's initial. */
   badge?: string;
   /** A line above the actions, saying what they're about. */
   heading?: ReactNode;
+  /** kind="button": the button's words. */
+  text?: string;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -89,12 +98,12 @@ export function ActionMenu({
         ref={button}
         type="button"
         aria-label={label}
-        title={label}
+        title={kind === "button" ? undefined : label}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((o) => !o)}
-        className={`relative flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${
+        className={kind === "button" ? buttonClassName("secondary", "sm") : `relative flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${
           kind === "add"
             ? "size-11 border border-dashed border-(--color-border-subtle)"
             : kind === "channel"
@@ -102,7 +111,14 @@ export function ActionMenu({
               : "size-8"
         }`}
       >
-        {kind === "channel" ? (
+        {kind === "button" ? (
+          <>
+            {text}
+            <svg data-part="chevron" aria-hidden viewBox="0 0 20 20" className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m5 8 5 5 5-5" />
+            </svg>
+          </>
+        ) : kind === "channel" ? (
           <>
             <span data-part="logo" aria-hidden className="inline-flex opacity-50">
               {icon}
@@ -136,7 +152,7 @@ export function ActionMenu({
           role="menu"
           aria-label={label}
           onKeyDown={onKeyDown}
-          className={`absolute ${kind === "more" ? "right-0" : "left-0"} z-30 mt-1 flex min-w-44 flex-col rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) p-1 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)]`}
+          className={`absolute ${kind === "more" || kind === "button" ? "right-0" : "left-0"} z-30 mt-1 flex min-w-44 flex-col rounded-(--radius-lg) border border-(--color-border-subtle) bg-(--color-surface-default) p-1 shadow-[0_var(--elevation-lg)_24px_rgb(0_0_0/0.16)]`}
         >
           {heading && (
             <p data-part="heading" className="max-w-64 px-3 pt-2 pb-1 text-xs text-(--color-content-secondary)">
