@@ -5,7 +5,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { Field, TextInput } from "../src/index.js";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Field, TextArea, TextInput } from "../src/index.js";
 
 declare global {
   var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
@@ -66,5 +67,13 @@ describe("TextInput sizes", () => {
     // Not the HTML size attribute; styles.css sizes it by data-size.
     expect(small.hasAttribute("size")).toBe(false);
     expect(small.getAttribute("data-size")).toBe("sm");
+  });
+});
+
+describe("TextArea corner (V4)", () => {
+  it("rounds a text area 24px, the same corner as the 48px pill inputs", () => {
+    const html = renderToStaticMarkup(<TextArea aria-label="What you do" />);
+    expect(html).toContain("rounded-[24px]");
+    expect(html).not.toContain("rounded-md");
   });
 });
