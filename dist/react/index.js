@@ -15,6 +15,7 @@ export { Card, CARD_BASE_CLASS, CARD_INTERACTIVE_CLASS, CARD_SELECTED_CLASS } fr
 export { Checkbox, Radio, RadioTiles } from "./choice.js";
 export { Dialog } from "./dialog.js";
 export { EmptyState } from "./empty-state.js";
+export { FormFooter } from "./form-footer.js";
 export { ActionButton, Chip, Field, FIELD_CONTROL_CLASS, TERTIARY_BUTTON_CLASS, TextArea, TextInput } from "./form-controls.js";
 export { IconButton } from "./icon-button.js";
 export { iconMask, iconUrl } from "./icons.js";
