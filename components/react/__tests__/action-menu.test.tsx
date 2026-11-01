@@ -171,4 +171,18 @@ describe("ActionMenu", () => {
     act(() => menu.querySelector<HTMLButtonElement>("[role='menuitem']")!.click());
     expect(calls).toEqual(["linkedin"]);
   });
+
+  it("can be the outlined Tertiary button, for a screen whose main action is elsewhere", () => {
+    host = document.createElement("div");
+    document.body.appendChild(host);
+    root = createRoot(host);
+    act(() =>
+      root.render(
+        <ActionMenu kind="button" buttonVariant="tertiary" text="Connect a channel" label="Connect a channel" items={[]} />,
+      ),
+    );
+    const button = host.querySelector<HTMLButtonElement>("button[aria-haspopup='menu']")!;
+    expect(button.className).toContain("bg-(--color-action-tertiary)");
+    expect(button.className).not.toContain("bg-(--color-action-secondary)");
+  });
 });

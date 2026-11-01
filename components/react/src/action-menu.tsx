@@ -31,7 +31,8 @@ export type ActionMenuItem = {
  * `kind="button"` is the black Secondary button (SM) with its own words
  * (`text`, "Connect a channel") and a chevron; its menu opens under its
  * right edge. `label` can say more for screen readers ("Connect a channel
- * to Stakemate").
+ * to Stakemate"). `buttonVariant="tertiary"` makes it the outlined Tertiary
+ * button, for a screen whose main action is elsewhere.
  */
 export function ActionMenu({
   label,
@@ -41,6 +42,7 @@ export function ActionMenu({
   badge,
   heading,
   text,
+  buttonVariant = "secondary",
   className = "",
 }: {
   label: string;
@@ -54,6 +56,8 @@ export function ActionMenu({
   heading?: ReactNode;
   /** kind="button": the button's words. */
   text?: string;
+  /** kind="button": black Secondary (default) or outlined Tertiary. */
+  buttonVariant?: "secondary" | "tertiary";
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -103,7 +107,7 @@ export function ActionMenu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((o) => !o)}
-        className={kind === "button" ? buttonClassName("secondary", "sm") : `relative flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${
+        className={kind === "button" ? buttonClassName(buttonVariant, "sm") : `relative flex items-center justify-center rounded-full text-(--color-content-secondary) transition-colors hover:bg-(--color-action-tertiary-hover) hover:text-(--color-content-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) ${
           kind === "add"
             ? "size-11 border border-dashed border-(--color-border-subtle)"
             : kind === "channel"
