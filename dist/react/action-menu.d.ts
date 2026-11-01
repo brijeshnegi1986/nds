@@ -26,9 +26,10 @@ export type ActionMenuItem = {
  * `kind="button"` is the black Secondary button (SM) with its own words
  * (`text`, "Connect a channel") and a chevron; its menu opens under its
  * right edge. `label` can say more for screen readers ("Connect a channel
- * to Stakemate").
+ * to Stakemate"). `buttonVariant="tertiary"` makes it the outlined Tertiary
+ * button, for a screen whose main action is elsewhere.
  */
-export declare function ActionMenu({ label, items, kind, icon, badge, heading, text, className, }: {
+export declare function ActionMenu({ label, items, kind, icon, badge, heading, text, buttonVariant, className, }: {
     label: string;
     items: ActionMenuItem[];
     kind?: "more" | "add" | "channel" | "button";
@@ -40,5 +41,7 @@ export declare function ActionMenu({ label, items, kind, icon, badge, heading, t
     heading?: ReactNode;
     /** kind="button": the button's words. */
     text?: string;
+    /** kind="button": black Secondary (default) or outlined Tertiary. */
+    buttonVariant?: "secondary" | "tertiary";
     className?: string;
 }): import("react").JSX.Element;

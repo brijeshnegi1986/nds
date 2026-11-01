@@ -9,7 +9,7 @@ export type RadioTileOption = {
 };
 /**
  * A required single choice as NDS Radio tiles (Figma "Radio", Type=Tile): a
- * white tile with the sm elevation, an orange border when picked, and the
+ * white tile with the sm elevation, a border in the selected colour when picked, and the
  * focus ring around the tile. The design's tile has a caption-size label
  * only; these add a line of description under a 14px title, since the
  * choices here need explaining. The whole tile picks its option.
@@ -23,8 +23,8 @@ export declare function RadioTiles({ legend, name, value, onChange, options, }: 
 }): import("react").JSX.Element;
 /**
  * The NDS Checkbox (Figma "Checkboxes", Variant=Basic): a 20px box with a
- * 4px radius in border-strong, filled orange with a tick (or, part-selected,
- * a bar) in content-on-primary when checked, and the 2px border-focus ring.
+ * 4px radius in border-strong, filled in the selected colour with a tick (or, part-selected,
+ * a bar) in --color-control-on-selected when checked, and the 2px border-focus ring.
  * Disabled and error states as in Figma. Label at 14px, with an optional
  * hint under it linked by aria-describedby; without a visible label, give it
  * an aria-label.
