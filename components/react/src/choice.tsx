@@ -4,11 +4,12 @@ import { type ReactNode, useEffect, useId, useRef } from "react";
 import { iconMask } from "./icons.js";
 
 /** The NDS radio dot (Figma 119:1247): a 20px ring in border-strong that
- * turns orange on hover, and when picked an orange disc with a 10px dot in
- * content-on-primary (dark in both modes, so it reads on orange). Native, so keyboard and screen readers work as usual;
+ * turns the selected colour on hover, and when picked a disc in the selected
+ * colour (--color-control-selected, orange unless the app sets it) with a
+ * 10px dot in --color-control-on-selected (content-on-primary unless set). Native, so keyboard and screen readers work as usual;
  * the focus ring is drawn by the tile around it. */
 const RADIO =
-  "size-5 shrink-0 cursor-pointer appearance-none rounded-full border-[1.5px] border-(--color-border-strong) bg-(--color-surface-default) transition-colors group-hover:border-(--color-action-primary) checked:border-(--color-action-primary) checked:bg-(--color-content-on-primary) checked:shadow-[inset_0_0_0_3.5px_var(--color-action-primary)] focus-visible:outline-none aria-[invalid=true]:border-(--color-border-error) disabled:cursor-not-allowed disabled:border-(--color-border-disabled) disabled:bg-(--color-action-disabled) disabled:group-hover:border-(--color-border-disabled) disabled:checked:bg-(--color-content-disabled) disabled:checked:shadow-[inset_0_0_0_3.5px_var(--color-action-disabled)]";
+  "size-5 shrink-0 cursor-pointer appearance-none rounded-full border-[1.5px] border-(--color-border-strong) bg-(--color-surface-default) transition-colors group-hover:border-[var(--color-control-selected,var(--color-action-primary))] checked:border-[var(--color-control-selected,var(--color-action-primary))] checked:bg-[var(--color-control-on-selected,var(--color-content-on-primary))] checked:shadow-[inset_0_0_0_3.5px_var(--color-control-selected,var(--color-action-primary))] focus-visible:outline-none aria-[invalid=true]:border-(--color-border-error) disabled:cursor-not-allowed disabled:border-(--color-border-disabled) disabled:bg-(--color-action-disabled) disabled:group-hover:border-(--color-border-disabled) disabled:checked:bg-(--color-content-disabled) disabled:checked:shadow-[inset_0_0_0_3.5px_var(--color-action-disabled)]";
 
 export type RadioTileOption = {
   value: string;
@@ -21,7 +22,7 @@ export type RadioTileOption = {
 
 /**
  * A required single choice as NDS Radio tiles (Figma "Radio", Type=Tile): a
- * white tile with the sm elevation, an orange border when picked, and the
+ * white tile with the sm elevation, a border in the selected colour when picked, and the
  * focus ring around the tile. The design's tile has a caption-size label
  * only; these add a line of description under a 14px title, since the
  * choices here need explaining. The whole tile picks its option.
@@ -52,7 +53,7 @@ export function RadioTiles({
               key={option.value}
               onClick={() => !picked && onChange(option.value)}
               className={`group flex cursor-pointer flex-col gap-1 rounded-(--radius-sm) border bg-(--color-surface-default) px-3 py-3 shadow-[0_var(--elevation-sm)_2px_rgb(0_0_0/0.1)] transition-colors has-[input[type=radio]:focus-visible]:outline-2 has-[input[type=radio]:focus-visible]:outline-offset-2 has-[input[type=radio]:focus-visible]:outline-(--color-border-focus) ${
-                picked ? "border-(--color-border-focus)" : "border-transparent"
+                picked ? "border-[var(--color-control-selected,var(--color-action-primary))]" : "border-transparent"
               }`}
             >
               <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-(--color-content-primary)">
@@ -81,8 +82,8 @@ export function RadioTiles({
 
 /**
  * The NDS Checkbox (Figma "Checkboxes", Variant=Basic): a 20px box with a
- * 4px radius in border-strong, filled orange with a tick (or, part-selected,
- * a bar) in content-on-primary when checked, and the 2px border-focus ring.
+ * 4px radius in border-strong, filled in the selected colour with a tick (or, part-selected,
+ * a bar) in --color-control-on-selected when checked, and the 2px border-focus ring.
  * Disabled and error states as in Figma. Label at 14px, with an optional
  * hint under it linked by aria-describedby; without a visible label, give it
  * an aria-label.
@@ -123,18 +124,18 @@ export function Checkbox({
         aria-label={ariaLabel}
         aria-invalid={invalid || undefined}
         aria-describedby={hint ? hintId : undefined}
-        className="peer size-5 cursor-pointer appearance-none rounded-(--radius-sm) border-[1.5px] border-(--color-border-strong) bg-(--color-surface-default) transition-colors group-hover:border-(--color-action-primary) checked:border-(--color-action-primary) checked:bg-(--color-action-primary) indeterminate:border-(--color-action-primary) indeterminate:bg-(--color-action-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) aria-[invalid=true]:border-(--color-border-error) disabled:cursor-not-allowed disabled:border-(--color-border-disabled) disabled:bg-(--color-action-disabled) disabled:group-hover:border-(--color-border-disabled)"
+        className="peer size-5 cursor-pointer appearance-none rounded-(--radius-sm) border-[1.5px] border-(--color-border-strong) bg-(--color-surface-default) transition-colors group-hover:border-[var(--color-control-selected,var(--color-action-primary))] checked:border-[var(--color-control-selected,var(--color-action-primary))] checked:bg-[var(--color-control-selected,var(--color-action-primary))] indeterminate:border-[var(--color-control-selected,var(--color-action-primary))] indeterminate:bg-[var(--color-control-selected,var(--color-action-primary))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-border-focus) aria-[invalid=true]:border-(--color-border-error) disabled:cursor-not-allowed disabled:border-(--color-border-disabled) disabled:bg-(--color-action-disabled) disabled:group-hover:border-(--color-border-disabled)"
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 hidden bg-(--color-content-on-primary) peer-checked:block peer-indeterminate:hidden peer-disabled:bg-(--color-content-disabled)"
+        className="pointer-events-none absolute inset-0 hidden bg-[var(--color-control-on-selected,var(--color-content-on-primary))] peer-checked:block peer-indeterminate:hidden peer-disabled:bg-(--color-content-disabled)"
         style={{
           ...iconMask("check"),
         }}
       />
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-1 top-1/2 hidden h-0.5 -translate-y-1/2 rounded-full bg-(--color-content-on-primary) peer-indeterminate:block peer-disabled:bg-(--color-content-disabled)"
+        className="pointer-events-none absolute inset-x-1 top-1/2 hidden h-0.5 -translate-y-1/2 rounded-full bg-[var(--color-control-on-selected,var(--color-content-on-primary))] peer-indeterminate:block peer-disabled:bg-(--color-content-disabled)"
       />
     </span>
   );
