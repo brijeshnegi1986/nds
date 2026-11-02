@@ -84,3 +84,12 @@ describe("ToastProvider", () => {
     for (const t of toasts) expect(t.className).toContain("rounded-(--radius-md)");
   });
 });
+
+describe("ToastProvider: room for an app's bottom bar", () => {
+  it("sits 16px up by default, or as far as --nds-toast-offset says", () => {
+    render();
+    const stack = container.querySelector<HTMLElement>('[aria-live="polite"]')!;
+    expect(stack.className).toContain("bottom-[var(--nds-toast-offset,1rem)]");
+    expect(stack.className).not.toMatch(/(^| )bottom-4( |$)/);
+  });
+});
