@@ -93,6 +93,13 @@ describe("ImageUpload", () => {
     expect(input.getAttribute("aria-label")).toBe("Add an image");
   });
 
+  it("colours browse as the app's links when it sets --color-text-link, the link colour otherwise", () => {
+    mount(<ImageUpload state={{ status: "idle" }} onFile={() => {}} />);
+    const browse = [...container.querySelectorAll("span")].find((el) => el.textContent === "browse")!;
+    expect(browse.className).toContain("text-[var(--color-text-link,var(--color-content-link))]");
+    expect(browse.className).toContain("underline");
+  });
+
   it("hands a dropped image to onFile, and refuses one that's too big or the wrong type", () => {
     const onFile = vi.fn();
     mount(<ImageUpload state={{ status: "idle" }} onFile={onFile} maxBytes={1024 * 1024} />);
