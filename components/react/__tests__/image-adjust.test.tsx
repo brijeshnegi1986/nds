@@ -104,3 +104,11 @@ describe("cropImage", () => {
     toBlob.mockRestore();
   });
 });
+
+describe("ImageAdjust in a server-rendered app", () => {
+  it("is a client component, so a server component importing the library never loads the cropper", async () => {
+    const { readFileSync } = await import("node:fs");
+    const source = readFileSync(new URL("../src/image-adjust.tsx", import.meta.url), "utf8");
+    expect(source.startsWith('"use client";')).toBe(true);
+  });
+});
