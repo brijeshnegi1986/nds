@@ -20,6 +20,7 @@ export { ActionButton, Chip, Field, FIELD_CONTROL_CLASS, TERTIARY_BUTTON_CLASS, 
 export { IconButton } from "./icon-button.js";
 export { iconMask, iconUrl } from "./icons.js";
 export { ImageUpload, formatFileSize } from "./image-upload.js";
+export { ImageAdjust, cropImage } from "./image-adjust.js";
 export { SearchField } from "./search-field.js";
 export { Select } from "./select.js";
 export { Separator } from "./separator.js";
