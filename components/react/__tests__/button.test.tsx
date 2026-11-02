@@ -33,9 +33,9 @@ describe("Button", () => {
     expect(classes).toEqual(expect.arrayContaining(["font-semibold", "tracking-[0.056px]", "gap-2"]));
   });
 
-  it("draws Plain as link-coloured text with no fill or border", () => {
+  it("draws Plain as link-coloured text with no fill or border: the app's link colour when it sets --color-text-link", () => {
     const classes = classesOf(<Button variant="plain">Go</Button>);
-    expect(classes).toContain("text-(--color-content-link)");
+    expect(classes).toContain("text-[var(--color-text-link,var(--color-content-link))]");
     expect(classes.some((c) => c.startsWith("bg-("))).toBe(false);
     expect(classes).not.toContain("border");
   });

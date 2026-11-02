@@ -25,7 +25,7 @@ describe("Snackbar", () => {
     expect(el.querySelector('[data-part="divider"]')).not.toBeNull();
     const button = el.querySelector("button")!;
     expect(button.textContent).toBe("Retry");
-    expect(button.className).toContain("text-(--color-content-link)");
+    expect(button.className).toContain("text-[var(--color-text-link,var(--color-content-link))]");
   });
 
   it("stacks a multi-line action below the text, at the right", () => {
