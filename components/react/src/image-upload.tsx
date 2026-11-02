@@ -277,7 +277,9 @@ export function ImageUpload({
             "Drop to upload"
           ) : (
             <>
-              Drag an image here, or <span className="text-(--color-content-link) underline underline-offset-2">browse</span>
+              Drag an image here, or{" "}
+              {/* The app's link colour if it sets one (--color-text-link), NDS's otherwise. */}
+              <span className="text-[var(--color-text-link,var(--color-content-link))] underline underline-offset-2">browse</span>
             </>
           )}
         </span>
