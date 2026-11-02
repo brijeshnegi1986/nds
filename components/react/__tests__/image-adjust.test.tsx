@@ -108,7 +108,8 @@ describe("cropImage", () => {
 describe("ImageAdjust in a server-rendered app", () => {
   it("is a client component, so a server component importing the library never loads the cropper", async () => {
     const { readFileSync } = await import("node:fs");
-    const source = readFileSync(new URL("../src/image-adjust.tsx", import.meta.url), "utf8");
+    const { join } = await import("node:path");
+    const source = readFileSync(join(process.cwd(), "components/react/src/image-adjust.tsx"), "utf8");
     expect(source.startsWith('"use client";')).toBe(true);
   });
 });
