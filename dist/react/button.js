@@ -14,7 +14,9 @@ import { iconMask } from "./icons.js";
  *   compact row. Colours are the --color-action-secondary-* tokens.
  * - tertiary: the light, outlined button for everything else (Back,
  *   Cancel, Edit).
- * - plain: link-coloured text (content-link, 4.5:1), no fill or border.
+ * - plain: link-coloured text, no fill or border: the app's link colour
+ *   when it sets --color-text-link (as ImageUpload's browse does), else
+ *   content-link (4.5:1).
  * - ghost: an orange outline on white.
  * - destructive: outlined red (Figma Variant=Destructive): the action's
  *   resting fill, a red edge and red text, the fill tinting red on hover and
@@ -28,7 +30,7 @@ const VARIANT_CLASSES = {
     primary: "bg-(--color-action-primary) text-(--color-content-on-primary) hover:bg-(--color-action-primary-hover) active:bg-(--color-action-primary-pressed)",
     secondary: "border border-(--color-border-subtle) bg-(--color-action-secondary) text-(--color-content-on-secondary) hover:bg-(--color-action-secondary-hover) active:bg-(--color-action-secondary-pressed)",
     tertiary: "border border-(--color-border-subtle) bg-(--color-action-tertiary) text-(--color-content-on-tertiary) hover:bg-(--color-action-tertiary-hover) active:bg-(--color-action-tertiary-pressed)",
-    plain: "text-(--color-content-link) hover:bg-(--color-action-tertiary-hover) active:bg-(--color-action-tertiary-pressed)",
+    plain: "text-[var(--color-text-link,var(--color-content-link))] hover:bg-(--color-action-tertiary-hover) active:bg-(--color-action-tertiary-pressed)",
     ghost: "border border-(--color-border-primary) bg-(--color-surface-default) text-(--color-content-link) hover:bg-(--color-action-tertiary-hover) active:bg-(--color-action-tertiary-pressed)",
     destructive: "border border-(--color-border-error) bg-(--color-action-destructive-subtle) text-(--color-content-destructive) hover:bg-(--color-action-destructive-subtle-hover) active:bg-(--color-action-destructive-subtle-pressed)",
     danger: "text-(--color-status-error) hover:underline disabled:opacity-60",
