@@ -14,6 +14,48 @@ function Glyph({ d }: { d: string }) {
   );
 }
 
+/**
+ * A website article's body: text, with each line starting `## ` shown as a
+ * subheading. Everything is a text node, never HTML. The preview sits inside a
+ * page that already has its own h1/h2, so the title is an h3 and subheadings h4.
+ */
+function ArticleBody({ children }: { children?: ReactNode }) {
+  if (typeof children !== "string") {
+    return <div className="px-4 text-sm leading-relaxed whitespace-pre-wrap text-(--color-content-primary)">{children}</div>;
+  }
+  const pieces: { heading: boolean; text: string }[] = [];
+  let text: string[] = [];
+  const flush = () => {
+    const t = text.join("\n").trim();
+    if (t) pieces.push({ heading: false, text: t });
+    text = [];
+  };
+  for (const line of children.split("\n")) {
+    if (line.startsWith("## ")) {
+      flush();
+      pieces.push({ heading: true, text: line.slice(3).trim() });
+    } else {
+      text.push(line);
+    }
+  }
+  flush();
+  return (
+    <div className="flex flex-col gap-3 px-4 text-sm leading-relaxed text-(--color-content-primary)">
+      {pieces.map((p, i) =>
+        p.heading ? (
+          <h4 key={i} className="mt-2 text-base font-semibold">
+            {p.text}
+          </h4>
+        ) : (
+          <p key={i} className="whitespace-pre-wrap">
+            {p.text}
+          </p>
+        ),
+      )}
+    </div>
+  );
+}
+
 const HEART = "M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z";
 const BUBBLE = "M4 12a8 8 0 1 1 3.3 6.5L4 20l1.2-3.4A8 8 0 0 1 4 12z";
 const SEND = "M21 4 3 11l7 3 3 7 8-17zM10 14l11-10";
@@ -27,8 +69,11 @@ const REPOST = "M7 7h10l-3-3M17 17H7l3 3M17 7v4M7 17v-4";
  *
  * `children` is the post's text, or an editor for it. Without `avatar` the
  * avatar is the name's first letter. `imagePlaceholder` fills the image's
- * place until there is one (Instagram and Pinterest need one). A Pin
- * shows its `title` in bold under a tall 2:3 image, and has no reactions bar.
+ * place until there is one (Instagram and Pinterest need one). A website
+ * article shows its `title` as a heading, `## ` lines in the text as subheadings, and no reactions bar. A Pin
+ * shows its `title` in bold under a tall 2:3 image, and has no reactions bar. A website
+ * article shows its `title` as a heading and `## ` lines in the text as
+ * subheadings, with no reactions bar.
  */
 export function PostPreview({
   platform,
@@ -63,6 +108,8 @@ export function PostPreview({
   const pinterest = platform === "pinterest";
   // A Google Business Profile update: the photo, then the text; no likes or comments.
   const google = platform === "google_business";
+  // A blog article on the business's own website: headline, hero image, body with subheadings; no reactions.
+  const website = platform === "website";
   const shape = instagram ? "aspect-square" : pinterest ? "aspect-[2/3]" : null;
   const picture = image ? (
     <img src={image} alt={imageAlt} className={`w-full bg-(--color-surface-raised) object-cover ${shape ?? "max-h-96"}`} />
@@ -123,6 +170,13 @@ export function PostPreview({
             </div>
           )}
           {body}
+        </>
+      ) : website ? (
+        <>
+          {title && (
+            <h3 className="px-4 text-xl leading-snug font-semibold text-(--color-content-primary)">{title}</h3>
+          )}
+          <ArticleBody>{children}</ArticleBody>
         </>
       ) : google ? (
         body

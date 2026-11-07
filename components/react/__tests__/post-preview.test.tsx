@@ -82,6 +82,53 @@ describe("PostPreview", () => {
     expect(el.querySelector("[data-reactions]")).toBeNull();
   });
 
+  it("renders the title as a heading when the platform is website", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="Keep a starter alive">
+        {"Feed it daily."}
+      </PostPreview>,
+    );
+    expect(el.getAttribute("data-platform")).toBe("website");
+    const h = el.querySelector("h3")!;
+    expect(h.textContent).toBe("Keep a starter alive");
+    expect(el.querySelector("[data-title]")).toBeNull();
+  });
+
+  it("shows no reactions bar for a website post", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T" image="https://cdn.example/h.jpg">
+        {"Body."}
+      </PostPreview>,
+    );
+    expect(el.querySelector("[data-reactions]")).toBeNull();
+    expect(el.querySelector("img")!.getAttribute("src")).toBe("https://cdn.example/h.jpg");
+  });
+
+  it('renders "## How it works" as a heading, not as literal hashes', () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T">
+        {"Intro paragraph.\n\n## How it works\nMix and wait."}
+      </PostPreview>,
+    );
+    const h = el.querySelector("h4")!;
+    expect(h.textContent).toBe("How it works");
+    expect(el.textContent).not.toContain("##");
+    expect(el.textContent).toContain("Intro paragraph.");
+    expect(el.textContent).toContain("Mix and wait.");
+  });
+
+  it("renders a <script> tag in the body as visible text, not as markup", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T">
+        {"Hello <script>alert(1)</script>\n## <b>bold</b> heading"}
+      </PostPreview>,
+    );
+    expect(el.querySelector("script")).toBeNull();
+    expect(el.querySelector("b")).toBeNull();
+    expect(el.textContent).toContain("<script>alert(1)</script>");
+    expect(el.querySelector("h4")!.textContent).toBe("<b>bold</b> heading");
+  });
+
   it("can show the channel's logo where the letter avatar would be", () => {
     const el = dom(
       <PostPreview platform="facebook" name="Negiflow (Page)" icon={<span data-icon-facebook />}>
