@@ -151,13 +151,18 @@ describe("PostPreview", () => {
   });
 
   it("recognises ## headings in a website body with \\r\\n line endings, with no stray \\r", () => {
-    const el = dom(
+    // Check the markup string: an HTML parser would normalise a \r away and hide a regression.
+    const html = renderToStaticMarkup(
       <PostPreview platform="website" name="Harbour Lane Bakery" title="T">
-        {"Intro.\r\n## How it works\r\nMix."}
+        {"Intro.\r\nMore.\r\n## How it works\r\nBody."}
       </PostPreview>,
     );
+    expect(html).not.toContain("\r");
+    const el = new DOMParser().parseFromString(html, "text/html").body;
     expect(el.querySelector("h4")!.textContent).toBe("How it works");
-    expect(el.textContent).not.toContain("\r");
+    expect(el.textContent).toContain("Intro.");
+    expect(el.textContent).toContain("More.");
+    expect(el.textContent).toContain("Body.");
   });
 
   it("does not turn an empty ## line into an empty heading", () => {
@@ -167,6 +172,10 @@ describe("PostPreview", () => {
       </PostPreview>,
     );
     expect(el.querySelector("h4")).toBeNull();
+    // The line stays as text rather than being dropped.
+    expect(el.textContent).toContain("##");
+    expect(el.textContent).toContain("Intro.");
+    expect(el.textContent).toContain("More.");
   });
 
   it("can show the channel's logo where the letter avatar would be", () => {
