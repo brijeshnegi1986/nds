@@ -7,8 +7,7 @@ import type { ReactNode } from "react";
  *
  * `children` is the post's text, or an editor for it. Without `avatar` the
  * avatar is the name's first letter. `imagePlaceholder` fills the image's
- * place until there is one (Instagram and Pinterest need one). A website
- * article shows its `title` as a heading, `## ` lines in the text as subheadings, and no reactions bar. A Pin
+ * place until there is one (Instagram and Pinterest need one). A Pin
  * shows its `title` in bold under a tall 2:3 image, and has no reactions bar. A website
  * article shows its `title` as a heading and `## ` lines in the text as
  * subheadings, with no reactions bar.

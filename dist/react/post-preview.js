@@ -24,10 +24,12 @@ function ArticleBody({ children }) {
             pieces.push({ heading: false, text: t });
         text = [];
     };
-    for (const line of children.split("\n")) {
-        if (line.startsWith("## ")) {
+    for (const line of children.split(/\r?\n/)) {
+        const heading = line.startsWith("## ") ? line.slice(3).trim() : "";
+        // A bare "## " has nothing to announce, so it stays ordinary text.
+        if (heading) {
             flush();
-            pieces.push({ heading: true, text: line.slice(3).trim() });
+            pieces.push({ heading: true, text: heading });
         }
         else {
             text.push(line);
@@ -48,8 +50,7 @@ const REPOST = "M7 7h10l-3-3M17 17H7l3 3M17 7v4M7 17v-4";
  *
  * `children` is the post's text, or an editor for it. Without `avatar` the
  * avatar is the name's first letter. `imagePlaceholder` fills the image's
- * place until there is one (Instagram and Pinterest need one). A website
- * article shows its `title` as a heading, `## ` lines in the text as subheadings, and no reactions bar. A Pin
+ * place until there is one (Instagram and Pinterest need one). A Pin
  * shows its `title` in bold under a tall 2:3 image, and has no reactions bar. A website
  * article shows its `title` as a heading and `## ` lines in the text as
  * subheadings, with no reactions bar.

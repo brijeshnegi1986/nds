@@ -129,6 +129,46 @@ describe("PostPreview", () => {
     expect(el.querySelector("h4")!.textContent).toBe("<b>bold</b> heading");
   });
 
+  it("shows the image placeholder for a website post with no image", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T" imagePlaceholder={<span data-ph>Add a hero image</span>}>
+        {"Body."}
+      </PostPreview>,
+    );
+    expect(el.querySelector("[data-ph]")!.textContent).toBe("Add a hero image");
+    expect(el.querySelector("img")).toBeNull();
+  });
+
+  it("keeps a website body with no ## lines intact and emits no subheadings", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T">
+        {"First paragraph.\n\nSecond paragraph."}
+      </PostPreview>,
+    );
+    expect(el.querySelector("h4")).toBeNull();
+    expect(el.textContent).toContain("First paragraph.");
+    expect(el.textContent).toContain("Second paragraph.");
+  });
+
+  it("recognises ## headings in a website body with \\r\\n line endings, with no stray \\r", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T">
+        {"Intro.\r\n## How it works\r\nMix."}
+      </PostPreview>,
+    );
+    expect(el.querySelector("h4")!.textContent).toBe("How it works");
+    expect(el.textContent).not.toContain("\r");
+  });
+
+  it("does not turn an empty ## line into an empty heading", () => {
+    const el = dom(
+      <PostPreview platform="website" name="Harbour Lane Bakery" title="T">
+        {"Intro.\n## \nMore."}
+      </PostPreview>,
+    );
+    expect(el.querySelector("h4")).toBeNull();
+  });
+
   it("can show the channel's logo where the letter avatar would be", () => {
     const el = dom(
       <PostPreview platform="facebook" name="Negiflow (Page)" icon={<span data-icon-facebook />}>
