@@ -23,7 +23,7 @@ export declare function PostPreview({ platform, name, meta, avatar, icon, image,
     image?: string | null;
     imageAlt?: string;
     imagePlaceholder?: ReactNode;
-    /** A video post: replaces the image. `durationLabel` (e.g. "0:12") shows in the corner and in the accessible label. */
+    /** A video post: replaces the image, and the image placeholder (`imagePlaceholder`) too. `durationLabel` (e.g. "0:12") shows in the corner and in the accessible label. */
     video?: {
         src: string;
         poster?: string | null;

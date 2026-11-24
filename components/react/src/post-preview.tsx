@@ -100,7 +100,7 @@ export function PostPreview({
   image?: string | null;
   imageAlt?: string;
   imagePlaceholder?: ReactNode;
-  /** A video post: replaces the image. `durationLabel` (e.g. "0:12") shows in the corner and in the accessible label. */
+  /** A video post: replaces the image, and the image placeholder (`imagePlaceholder`) too. `durationLabel` (e.g. "0:12") shows in the corner and in the accessible label. */
   video?: { src: string; poster?: string | null; durationLabel?: string } | null;
   /** A Pin's title, shown above the text (Pinterest only). */
   title?: ReactNode;

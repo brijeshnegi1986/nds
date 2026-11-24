@@ -35,4 +35,5 @@ export { PostPreview } from "./post-preview.js";
 export { SidePanel } from "./side-panel.js";
 export { Tag } from "./tag.js";
 export { TipPanel } from "./tip-panel.js";
+export { VideoMark } from "./video-mark.js";
 export { Tooltip } from "./tooltip.js";

@@ -1,5 +1,7 @@
 /** PostPreview: a social post as it will look on its channel. */
 import { describe, expect, it } from "vitest";
+import { flushSync } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PostPreview, SidePanel } from "../src/index.js";
 
@@ -211,12 +213,35 @@ describe("PostPreview", () => {
       expect(v.getAttribute("src")).toBe("https://cdn.example/v.mp4");
       expect(v.getAttribute("poster")).toBe("https://cdn.example/poster.jpg");
       expect(v.hasAttribute("controls")).toBe(true);
-      expect(v.hasAttribute("muted")).toBe(true);
       expect(v.hasAttribute("playsinline")).toBe(true);
       expect(v.getAttribute("preload")).toBe("none");
       expect(v.getAttribute("aria-label")).toBe("Video, 0:12");
       expect(v.className).toContain("max-h-96");
       expect(el.querySelector("[data-duration]")!.textContent).toBe("0:12");
+    });
+
+    it("mounts the video muted (the property, which is what React sets)", () => {
+      const host = document.createElement("div");
+      document.body.appendChild(host);
+      const root = createRoot(host);
+      flushSync(() => root.render(<PostPreview platform="facebook" name="NegiFlow" video={video} />));
+      expect((host.querySelector("video") as HTMLVideoElement).muted).toBe(true);
+      root.unmount();
+      host.remove();
+    });
+
+    it("keeps the length in a top corner, clear of the control bar, and out of the way", () => {
+      const d = dom(<PostPreview platform="facebook" name="NegiFlow" video={video} />).querySelector("[data-duration]")!;
+      expect(d.className).toContain("top-2");
+      expect(d.className).not.toMatch(/bottom-/);
+      expect(d.getAttribute("aria-hidden")).toBe("true");
+      expect(d.className).toContain("pointer-events-none");
+    });
+
+    it("shows the video where the image placeholder would go, as well as the image", () => {
+      const el = dom(<PostPreview platform="instagram" name="negiflow" imagePlaceholder="Add one" video={video} />);
+      expect(el.querySelector("video")).not.toBeNull();
+      expect(el.textContent).not.toContain("Add one");
       expect(el.querySelectorAll("img").length).toBe(0);
     });
 
