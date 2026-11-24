@@ -12,7 +12,7 @@ import type { ReactNode } from "react";
  * article shows its `title` as a heading and `## ` lines in the text as
  * subheadings, with no reactions bar.
  */
-export declare function PostPreview({ platform, name, meta, avatar, icon, image, imageAlt, imagePlaceholder, title, className, children, }: {
+export declare function PostPreview({ platform, name, meta, avatar, icon, image, imageAlt, imagePlaceholder, video, title, className, children, }: {
     platform: string;
     name: string;
     /** Under the name, e.g. "Just now · Facebook". */
@@ -23,6 +23,12 @@ export declare function PostPreview({ platform, name, meta, avatar, icon, image,
     image?: string | null;
     imageAlt?: string;
     imagePlaceholder?: ReactNode;
+    /** A video post: replaces the image. `durationLabel` (e.g. "0:12") shows in the corner and in the accessible label. */
+    video?: {
+        src: string;
+        poster?: string | null;
+        durationLabel?: string;
+    } | null;
     /** A Pin's title, shown above the text (Pinterest only). */
     title?: ReactNode;
     className?: string;

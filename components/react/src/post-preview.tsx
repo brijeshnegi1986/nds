@@ -85,6 +85,7 @@ export function PostPreview({
   image,
   imageAlt = "",
   imagePlaceholder,
+  video,
   title,
   className = "",
   children,
@@ -99,6 +100,8 @@ export function PostPreview({
   image?: string | null;
   imageAlt?: string;
   imagePlaceholder?: ReactNode;
+  /** A video post: replaces the image. `durationLabel` (e.g. "0:12") shows in the corner and in the accessible label. */
+  video?: { src: string; poster?: string | null; durationLabel?: string } | null;
   /** A Pin's title, shown above the text (Pinterest only). */
   title?: ReactNode;
   className?: string;
@@ -112,7 +115,29 @@ export function PostPreview({
   // A blog article on the business's own website: headline, hero image, body with subheadings; no reactions.
   const website = platform === "website";
   const shape = instagram ? "aspect-square" : pinterest ? "aspect-[2/3]" : null;
-  const picture = image ? (
+  const picture = video ? (
+    <div className="relative">
+      <video
+        src={video.src}
+        poster={video.poster || undefined}
+        controls
+        muted
+        playsInline
+        preload="none"
+        aria-label={video.durationLabel ? `Video, ${video.durationLabel}` : "Video"}
+        className={`w-full bg-(--color-surface-raised) object-cover ${instagram ? "aspect-[9/16] max-h-96" : "max-h-96"}`}
+      />
+      {video.durationLabel && (
+        <span
+          data-duration
+          aria-hidden="true"
+          className="pointer-events-none absolute top-2 right-2 rounded-(--radius-sm) bg-(--color-surface-default) px-1.5 py-0.5 text-xs font-medium text-(--color-content-primary)"
+        >
+          {video.durationLabel}
+        </span>
+      )}
+    </div>
+  ) : image ? (
     <img src={image} alt={imageAlt} className={`w-full bg-(--color-surface-raised) object-cover ${shape ?? "max-h-96"}`} />
   ) : imagePlaceholder ? (
     <div

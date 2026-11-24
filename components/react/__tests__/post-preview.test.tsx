@@ -197,6 +197,68 @@ describe("PostPreview", () => {
     expect(el.querySelector("img")).toBeNull();
     expect(el.textContent).toContain("Add an image to post on Instagram");
   });
+
+  describe("video", () => {
+    const video = { src: "https://cdn.example/v.mp4", poster: "https://cdn.example/poster.jpg", durationLabel: "0:12" };
+
+    it("shows a video with its poster, no image, and its length in the corner", () => {
+      const el = dom(
+        <PostPreview platform="facebook" name="NegiFlow" video={video}>
+          Text
+        </PostPreview>,
+      );
+      const v = el.querySelector("video")!;
+      expect(v.getAttribute("src")).toBe("https://cdn.example/v.mp4");
+      expect(v.getAttribute("poster")).toBe("https://cdn.example/poster.jpg");
+      expect(v.hasAttribute("controls")).toBe(true);
+      expect(v.hasAttribute("muted")).toBe(true);
+      expect(v.hasAttribute("playsinline")).toBe(true);
+      expect(v.getAttribute("preload")).toBe("none");
+      expect(v.getAttribute("aria-label")).toBe("Video, 0:12");
+      expect(v.className).toContain("max-h-96");
+      expect(el.querySelector("[data-duration]")!.textContent).toBe("0:12");
+      expect(el.querySelectorAll("img").length).toBe(0);
+    });
+
+    it("ignores image and the placeholder when a video is set", () => {
+      const el = dom(
+        <PostPreview platform="linkedin" name="NegiFlow" image="https://cdn.example/p.jpg" imagePlaceholder="Add one" video={video}>
+          Text
+        </PostPreview>,
+      );
+      expect(el.querySelector("video")).not.toBeNull();
+      expect(el.querySelector("img")).toBeNull();
+      expect(el.textContent).not.toContain("Add one");
+    });
+
+    it("labels it just Video and shows no length when there is no duration or poster", () => {
+      const el = dom(
+        <PostPreview platform="facebook" name="NegiFlow" video={{ src: "https://cdn.example/v.mp4" }}>
+          Text
+        </PostPreview>,
+      );
+      expect(el.querySelector("video")!.getAttribute("aria-label")).toBe("Video");
+      expect(el.querySelector("video")!.hasAttribute("poster")).toBe(false);
+      expect(el.querySelector("[data-duration]")).toBeNull();
+    });
+
+    it("is 9:16 on Instagram and ignored when null", () => {
+      const ig = dom(
+        <PostPreview platform="instagram" name="negiflow" video={video}>
+          Text
+        </PostPreview>,
+      );
+      expect(ig.querySelector("video")!.className).toContain("aspect-[9/16]");
+      expect(ig.querySelector("video")!.className).toContain("max-h-96");
+      const none = dom(
+        <PostPreview platform="facebook" name="NegiFlow" video={null} image="https://cdn.example/p.jpg">
+          Text
+        </PostPreview>,
+      );
+      expect(none.querySelector("video")).toBeNull();
+      expect(none.querySelector("img")).not.toBeNull();
+    });
+  });
 });
 
 describe("SidePanel docked without collapse", () => {
